@@ -1,6 +1,9 @@
 package resources.gpLibrary.models.primitives.interfaces;
 
 import resources.gpLibrary.models.highOrder.implementation.NodeTree;
+import resources.gpLibrary.models.highOrder.implementation.PopulationMember;
+
+import java.util.List;
 
 public interface IFitnessFunction<T> {
 
@@ -25,4 +28,10 @@ public interface IFitnessFunction<T> {
      */
     boolean firstFitterThanSecond(double firstFitness, double secondFitness);
 
+    /**
+     * Returns the fittest individual in the population
+     * @param members The members to compare the fitness of
+     * @return The fittest individual
+     */
+    PopulationMember<T> getFittest(List<PopulationMember<T>> members);
 }

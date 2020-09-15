@@ -30,7 +30,8 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
         for (int i = 0; i < populationSize; i++) {
             NodeTree<T> newTree = _generator.createRandom();
             PopulationMember<T> newMember = new PopulationMember<>(newTree);
-            newMember.setFitness(_fitnessFunction.getWorstPossibleValue());
+            IMemberStatistics_fitnessFunction.calculateFitness(newMember.getTree());
+            newMember.setFitness();
 
             _currentPopulation.add(newMember);
         }
@@ -51,7 +52,7 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
 
     @Override
     public PopulationMember<T> getBest() {
-        return null;
+        return _fitnessFunction.getFittest(_currentPopulation);
     }
 
     @Override
@@ -71,7 +72,8 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
 
     @Override
     public void reset() {
-
+        _currentPopulation = new ArrayList<>();
+        _nextPopulation = new ArrayList<>();
     }
 
     @Override
@@ -81,6 +83,7 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
 
     @Override
     public void setNewPopulation() {
-
+        _currentPopulation = _nextPopulation;
+        _nextPopulation = new ArrayList<>();
     }
 }

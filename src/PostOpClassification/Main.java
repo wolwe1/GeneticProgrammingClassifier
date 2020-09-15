@@ -1,23 +1,19 @@
 package PostOpClassification;
 
+import PostOpClassification.infrastructure.ClassifierFitnessFunction;
+import resources.gpLibrary.infrastructure.implementation.TreePopulationManager;
+import resources.gpLibrary.infrastructure.interfaces.GeneticAlgorithm;
+import resources.gpLibrary.models.primitives.enums.PrintLevel;
+import resources.gpLibrary.models.primitives.interfaces.IFitnessFunction;
+
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
-        loadTrainData();
-        loadTestData();
+        int seed = 0;
+        IFitnessFunction fitnessFunction = new ClassifierFitnessFunction();
+        IPopulationManager<Double> manager = new TreePopulationManager<>();
 
-        createFitnessFunction();
-        addStatistic();
-        addStatistic();
+        GeneticAlgorithm<Double> geneticAlgorithm = new GeneticAlgorithm<>(10,1,manager);
 
-        createGeneticAlgorithm();
-        setManager();
-
-        repeat{
-            bestTree = runForNGenerations();
-        }
-
-        compareBestTreesOnTestSet();
     }
 }

@@ -19,7 +19,7 @@ public class RandomPopulationMemberGenerator<T> implements resources.gpLibrary.i
 
 
     @Override
-    public List<PopulationMember<T>> operate(int numberOfOperations) {
+    public List<String> operate(List<String> chromosomes) {
         return null;
     }
 
@@ -32,19 +32,31 @@ public class RandomPopulationMemberGenerator<T> implements resources.gpLibrary.i
         _outputCount = outputCount;
     }
 
-    public double get_ratio() {
+    @Override
+    public int getInputCount() {
+        return 0;
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public void setPopulationSize(int populationSize) {
+
+    }
+
+    public double getRatio() {
         return _ratio;
     }
 
-    public void set_ratio(double _ratio) {
+    public void setRatio(double _ratio) {
         this._ratio = _ratio;
     }
 
-    public int get_populationSize() {
+    public int getPopulationSize() {
         return _populationSize;
     }
 
-    public void set_populationSize(int _populationSize) {
-        this._populationSize = _populationSize;
-    }
 }

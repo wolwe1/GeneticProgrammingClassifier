@@ -2,6 +2,7 @@ package resources.gpLibrary.models.primitives.interfaces;
 
 import resources.gpLibrary.models.highOrder.implementation.NodeTree;
 import resources.gpLibrary.models.highOrder.implementation.PopulationMember;
+import resources.gpLibrary.models.highOrder.interfaces.IMemberStatistics;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface IFitnessFunction<T> {
      * @param populationMember The package containing the tree
      * @return The fitness of the underlying tree
      */
-    double calculateFitness(NodeTree<T> populationMember);
+    IMemberStatistics calculateFitness(NodeTree<T> populationMember);
 
     /**
      * Evaluates if the fitness provided in the first parameter is better that that of the second

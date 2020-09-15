@@ -2,12 +2,15 @@ package resources.gpLibrary.infrastructure.interfaces;
 
 import resources.gpLibrary.helpers.Printer;
 import resources.gpLibrary.infrastructure.implementation.operators.RandomPopulationMemberGenerator;
+import resources.gpLibrary.infrastructure.interfaces.IGeneticAlgorithm;
+import resources.gpLibrary.infrastructure.interfaces.IGeneticOperator;
+import resources.gpLibrary.infrastructure.interfaces.IPopulationManager;
 import resources.gpLibrary.models.highOrder.implementation.PopulationMember;
 import resources.gpLibrary.models.primitives.enums.PrintLevel;
 
 import java.util.HashMap;
 
-public abstract class GeneticAlgorithm<T> implements IGeneticAlgorithm<T> {
+public class GeneticAlgorithm<T> implements IGeneticAlgorithm<T> {
 
     protected HashMap<String, IGeneticOperator<T>> _operators;
     protected IPopulationManager<T> _populationManager;
@@ -23,11 +26,13 @@ public abstract class GeneticAlgorithm<T> implements IGeneticAlgorithm<T> {
      * @param numberOfGenerations The number of generations the algorithm runs for
      * @param printLevel The level of print out to be displayed
      */
-    protected GeneticAlgorithm(int populationSize,int numberOfGenerations,PrintLevel printLevel){
+    public GeneticAlgorithm(int populationSize,int numberOfGenerations,IPopulationManager<T> populationManager){
         _populationSize = populationSize;
         _numGenerations = numberOfGenerations;
+        _populationManager = populationManager;
+
         _fixedPopulation = true;
-        _printLevel = printLevel;
+        _printLevel = PrintLevel.ALL;
 
         _operators = new HashMap<>();
         _operators.put("Random", new RandomPopulationMemberGenerator<>(0d, populationSize));
@@ -65,6 +70,8 @@ public abstract class GeneticAlgorithm<T> implements IGeneticAlgorithm<T> {
      */
     public PopulationMember<T> run() {
 
+        if(_populationManager == null) throw new RuntimeException("Population manager was not initialised");
+
         PopulationMember<T> bestPerformer = null;
         int bestPerformingGeneration = 0;
 
@@ -84,12 +91,10 @@ public abstract class GeneticAlgorithm<T> implements IGeneticAlgorithm<T> {
         return bestPerformer;
     }
 
-    /**
-     * Sets whether the population must maintain a fixed size or can reduce
-     * @param val Fixed status
-     */
-    public void setFixedPopulation(boolean val){_fixedPopulation = val;}
-
+    public void addOperator(IGeneticOperator<T> newOperator){
+        newOperator.setPopulationSize(_populationSize);
+        _operators.put(newOperator.getName(),newOperator);
+    }
     /**
      * Prints out the population histories statistics
      * @param bestPerformer The best performing member of the run
@@ -147,4 +152,30 @@ public abstract class GeneticAlgorithm<T> implements IGeneticAlgorithm<T> {
         _populationManager.printPopulationStatistics();
         Printer.printLine();
     }
+
+    //Setters
+
+    /**
+     * Sets whether the population must maintain a fixed size or can reduce
+     * @param val Fixed status
+     */
+    public void setFixedPopulation(boolean val){_fixedPopulation = val;}
+
+    /**
+     * Sets the population manager to use
+     * @param populationManager The new population manager
+     */
+    public void setPopulationManager(IPopulationManager<T> populationManager){
+        _populationManager = populationManager;
+    }
+
+    /**
+     * Sets the level of output from the algorithm
+     * @param level The output level
+     */
+    public void setPrintLevel(PrintLevel level){
+        _printLevel = level;
+    }
+
+
 }

@@ -45,7 +45,7 @@ public interface IPopulationManager<T> {
     void reset();
 
     /**
-     * Using the operator, create members of the next population
+     * Using the operator, create members of the next population, does not modify current population
      * @param operator The operator that will perform changes to the population
      */
     void operateOnPopulation(IGeneticOperator<T> operator);

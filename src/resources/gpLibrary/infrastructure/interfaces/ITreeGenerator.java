@@ -5,4 +5,6 @@ import resources.gpLibrary.models.highOrder.implementation.NodeTree;
 public interface ITreeGenerator<T> {
 
     NodeTree<T> createRandom();
+
+    NodeTree<T> create(String chromosome);
 }

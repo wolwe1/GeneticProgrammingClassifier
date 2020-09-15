@@ -12,7 +12,7 @@ import java.util.List;
 public class PopulationMember<T> {
 
     protected NodeTree<T> tree;
-    protected Double fitness;
+    protected double fitness;
     protected String id;
     protected boolean visited;
 
@@ -24,11 +24,11 @@ public class PopulationMember<T> {
         this.tree = tree;
     }
 
-    public Double getFitness() {
+    public double getFitness() {
         return fitness;
     }
 
-    public void setFitness(Double fitness) {
+    public void setFitness(double fitness) {
         this.fitness = fitness;
     }
 

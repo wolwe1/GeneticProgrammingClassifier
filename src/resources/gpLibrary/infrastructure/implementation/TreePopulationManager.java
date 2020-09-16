@@ -32,6 +32,9 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
         _generator = treeGenerator;
         _fitnessFunction = fitnessFunction;
         _randomNumberGenerator = new Random(seed);
+
+        _generator.setRandomFunction(_randomNumberGenerator);
+
         _currentPopulation = new ArrayList<>();
         _nextPopulation = new ArrayList<>();
         _populationStatistics = new ArrayList<>();

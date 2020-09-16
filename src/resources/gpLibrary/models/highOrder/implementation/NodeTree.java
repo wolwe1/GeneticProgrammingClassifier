@@ -133,4 +133,8 @@ public abstract class NodeTree<T>
     public abstract void clearLeaves();
 
     public abstract NodeTree<T> getCopy();
+
+    public int getMaxNodes() {
+        return _maxNodes;
+    }
 }

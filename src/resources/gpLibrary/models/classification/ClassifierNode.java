@@ -22,7 +22,7 @@ public class ClassifierNode extends Node<Integer> {
     }
 
     @Override
-    protected Node<Integer> getCopy() {
+    protected ClassifierNode getCopy() {
         return null;
     }
 

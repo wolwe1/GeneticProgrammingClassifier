@@ -25,12 +25,21 @@ public class FunctionalSet<T>
         return _functions.size();
     }
 
-    public GeneticFunction<T> get(int index) throws Exception {
+    public GeneticFunction<T> get(int index){
 
         if(index < 0 || index >= size())
-            throw new Exception("Attempted to access function out of range");
+            throw new RuntimeException("Attempted to access function out of range");
 
         return (GeneticFunction<T>) _functions.get(index).getCopy(false);
+    }
 
+    public GeneticFunction<T> get(String functionName) throws Exception {
+
+        for (GeneticFunction<T> function : _functions) {
+            if(function.name == functionName)
+                return (GeneticFunction<T>) function.getCopy(false);
+        }
+
+        throw new Exception("Attempted to access function '"+functionName+"' which does not exist");
     }
 }

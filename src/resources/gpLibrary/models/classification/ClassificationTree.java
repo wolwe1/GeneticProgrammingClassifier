@@ -5,11 +5,12 @@ import resources.gpLibrary.models.highOrder.implementation.NodeTree;
 import resources.gpLibrary.models.primitives.implementation.Node;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Queue;
 
 public class ClassificationTree extends NodeTree<Integer> {
 
-    private ClassifierNode<Integer> root;
+    private ClassifierNode root;
 
     public ClassificationTree(int maxDepth, int maxBreadth) {
         super(maxDepth, maxBreadth);
@@ -40,7 +41,7 @@ public class ClassificationTree extends NodeTree<Integer> {
         if (root == null)
         {
             node._level = 0;
-            root = (ClassifierNode<Integer>) node;
+            root = (ClassifierNode) node;
         }
         else
         {
@@ -51,8 +52,8 @@ public class ClassificationTree extends NodeTree<Integer> {
     @Override
     public void visitTree(ITreeVisitor<Integer> visitor)
     {
-        Queue<Node<Integer>> queue = new ArrayDeque<>();
-        Node<Integer> temp;
+        Queue<ClassifierNode> queue = new ArrayDeque<>();
+        ClassifierNode temp;
 
         queue.add(root);
 
@@ -62,13 +63,13 @@ public class ClassificationTree extends NodeTree<Integer> {
 
             visitor.visit(temp);
 
-            queue.addAll(temp.getChildren());
+            queue.addAll((Collection<? extends ClassifierNode>) temp.getChildren());
         }
     }
 
     protected void breadthFirstInsert(Node<Integer> node) throws Exception {
-        Queue<Node<Integer>> queue = new ArrayDeque<>();
-        Node<Integer> temp;
+        Queue<ClassifierNode> queue = new ArrayDeque<>();
+        ClassifierNode temp;
 
         queue.add(root);
 
@@ -82,7 +83,7 @@ public class ClassificationTree extends NodeTree<Integer> {
                 return;
             }
 
-            queue.addAll(temp.getChildren());
+            queue.addAll((Collection<? extends ClassifierNode>) temp.getChildren());
         }
     }
 

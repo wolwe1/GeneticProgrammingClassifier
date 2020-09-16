@@ -5,25 +5,23 @@ import resources.gpLibrary.functionality.implementation.TreeCombinationVisitor;
 import resources.gpLibrary.functionality.interfaces.ITreeVisitor;
 import resources.gpLibrary.models.primitives.implementation.Node;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
 
-public class NodeTree<T>
+public abstract class NodeTree<T>
 {
     //Structure
-    public  Node<T> root;
+    //public  Node<T> root;
     public int depth;
     public final int maxDepth;
     public final int maxBreadth;
 
-    private final int _maxNodes;
+    protected final int _maxNodes;
 
     public NodeTree(int maxDepth,int maxBreadth)
     {
         this.maxDepth = maxDepth;
         this.maxBreadth = maxBreadth;
-
-        root = null;
+        depth = 0;
+        //root = null;
         _maxNodes = calculateMaximumSize(maxBreadth,maxDepth);
     }
 
@@ -34,8 +32,8 @@ public class NodeTree<T>
     public NodeTree(NodeTree<T> other){
         this.maxDepth = other.maxDepth;
         this.maxBreadth = other.maxBreadth;
-
-        root = null;
+        this.depth = other.depth;
+        //root = null;
         _maxNodes = other._maxNodes;
     }
 
@@ -43,54 +41,20 @@ public class NodeTree<T>
      * Returns the amount of nodes in the tree
      * @return The amount of nodes in the tree
      */
-    public int getTreeSize()
-    {
-        return sumNodes(root);
-    }
+    public abstract int getTreeSize();
 
     /**
      * Adds a node into the tree, breadth first manner
      * @param node The node to be added
      * @throws Exception If the tree is full
      */
-    public void addNode(Node<T> node) throws Exception {
-
-        if (getTreeSize() == _maxNodes)
-            throw new Exception("Tree full");
-
-        node._maxChildren = maxBreadth;
-        //Empty tree
-        if (root == null)
-        {
-            node._level = 0;
-            root = node;
-        }
-        else
-        {
-            breadthFirstInsert(node);
-        }
-    }
+    public abstract void addNode(Node<T> node) throws Exception;
 
     /**
      * This function allows for a visitor to perform an action on the trees members, breadth first
      * @param visitor The visitor object that will have its visit function called on every node
      */
-    public void visitTree(ITreeVisitor<T> visitor)
-    {
-        Queue<Node<T>> queue = new ArrayDeque<>();
-        Node<T> temp;
-
-        queue.add(root);
-
-        while (queue.size() != 0)
-        {
-            temp = queue.remove();
-
-            visitor.visit(temp);
-
-            queue.addAll(temp.getChildren());
-        }
-    }
+    public abstract void visitTree(ITreeVisitor<T> visitor);
 
     /**
      * Returns the total amount of possible leaf nodes the tree can contain
@@ -106,7 +70,7 @@ public class NodeTree<T>
      * @param maxDepth The maximum depth of the tree, ie. The maximum number of nodes from root to terminal
      * @return The maximum number of nodes the tree can hold
      */
-    private int calculateMaximumSize(int maxBreadth, int maxDepth)
+    protected int calculateMaximumSize(int maxBreadth, int maxDepth)
     {
         int total = 0;
 
@@ -124,7 +88,7 @@ public class NodeTree<T>
      * @param node The root of the tree
      * @return The amount of nodes in the tree
      */
-    private int sumNodes(Node<T> node)
+    protected int sumNodes(Node<T> node)
     {
         int total = 0;
 
@@ -143,25 +107,7 @@ public class NodeTree<T>
      * @param node The node to be added to the tree
      * @throws Exception If the tree is full
      */
-    private void breadthFirstInsert(Node<T> node) throws Exception {
-        Queue<Node<T>> queue = new ArrayDeque<>();
-        Node<T> temp;
-
-        queue.add(root);
-
-        while (queue.size() != 0)
-        {
-            temp = queue.remove();
-
-            if (!temp.IsFull())
-            {
-                temp.addChild(node);
-                return;
-            }
-
-            queue.addAll(temp.getChildren());
-        }
-    }
+    protected abstract void breadthFirstInsert(Node<T> node) throws Exception;
 
     /**
      * Returns a string representing the tree's members, in breadth first order
@@ -184,18 +130,7 @@ public class NodeTree<T>
         return visitor.getNode(nodeIndex);
     }
 
-    public void clearLeaves() {
-        root.removeLeaves();
-    }
+    public abstract void clearLeaves();
 
-    public NodeTree<T> getCopy(){
-        NodeTree<T> newTree = new NodeTree<>(maxDepth,maxBreadth);
-        try {
-            newTree.addNode(root.getCopy(true));
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to copy tree");
-        }
-        newTree.depth = depth;
-        return newTree;
-    }
+    public abstract NodeTree<T> getCopy();
 }

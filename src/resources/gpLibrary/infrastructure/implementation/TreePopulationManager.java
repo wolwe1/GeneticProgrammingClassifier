@@ -9,7 +9,7 @@ import resources.gpLibrary.models.highOrder.implementation.NodeTree;
 import resources.gpLibrary.models.highOrder.implementation.PopulationMember;
 import resources.gpLibrary.models.highOrder.implementation.PopulationStatistics;
 import resources.gpLibrary.models.highOrder.interfaces.IMemberStatistics;
-import resources.gpLibrary.models.primitives.interfaces.IFitnessFunction;
+import resources.gpLibrary.models.primitives.IFitnessFunction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,15 +119,15 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
 
     @Override
     public void operateOnPopulation(IGeneticOperator<T> operator) {
-        List<String> unvisitedMembers = getUnvisitedMemberIds();
-        List<String> chosenMembers = new ArrayList<>();
+        List<PopulationMember<T>> unvisitedMembers = getUnvisitedMembers();
+        List<PopulationMember<T>> chosenMembers = new ArrayList<>();
 
         //Get the number of members required
         int numberOfMembersRequired = operator.getInputCount();
 
         for (int i = 0; i < numberOfMembersRequired; i++) {
             int chosenIndex = _randomNumberGenerator.nextInt(unvisitedMembers.size());
-            String chosenMember = unvisitedMembers.get(chosenIndex);
+            PopulationMember<T> chosenMember = unvisitedMembers.get(chosenIndex);
             unvisitedMembers.remove(chosenIndex);
 
             chosenMembers.add(chosenMember);
@@ -149,14 +149,19 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
         _nextPopulation = new ArrayList<>();
     }
 
-    private List<String> getUnvisitedMemberIds() {
-        List<String> memberIds = new ArrayList<>();
+    @Override
+    public ITreeGenerator<T> getTreeGenerator() {
+        return _generator;
+    }
+
+    private List<PopulationMember<T>> getUnvisitedMembers() {
+        List<PopulationMember<T>> members = new ArrayList<>();
 
         for (PopulationMember<T> member : _currentPopulation) {
             if(!member.isVisited())
-                memberIds.add(member.getId());
+                members.add(member);
         }
 
-        return memberIds;
+        return members;
     }
 }

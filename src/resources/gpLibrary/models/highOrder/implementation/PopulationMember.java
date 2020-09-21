@@ -1,7 +1,7 @@
 package resources.gpLibrary.models.highOrder.implementation;
 
-import resources.gpLibrary.models.primitives.implementation.Node;
-import resources.gpLibrary.models.primitives.implementation.TerminalNode;
+import resources.gpLibrary.models.primitives.nodes.abstractClasses.Node;
+import resources.gpLibrary.models.primitives.nodes.implementation.TerminalNode;
 
 import java.util.List;
 
@@ -68,10 +68,6 @@ public class PopulationMember<T> {
         newMember.fitness = fitness;
 
         return newMember;
-    }
-
-    public T makePrediction(){
-        return tree.root.getValue();
     }
 
     public void loadLeaves(List< ? extends TerminalNode<T>> leaves) {

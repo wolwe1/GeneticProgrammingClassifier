@@ -3,7 +3,7 @@ package resources.gpLibrary.models.highOrder.implementation;
 import resources.gpLibrary.functionality.implementation.BreadthFirstVisitor;
 import resources.gpLibrary.functionality.implementation.TreeCombinationVisitor;
 import resources.gpLibrary.functionality.interfaces.ITreeVisitor;
-import resources.gpLibrary.models.primitives.implementation.Node;
+import resources.gpLibrary.models.primitives.nodes.abstractClasses.Node;
 
 
 public abstract class NodeTree<T>
@@ -122,7 +122,7 @@ public abstract class NodeTree<T>
         return visitor.getCombination();
     }
 
-    public Node<T> getNode(int nodeIndex) throws Exception {
+    public Node<T> getNode(int nodeIndex){
 
         BreadthFirstVisitor<T> visitor = new BreadthFirstVisitor<>();
         visitTree(visitor);
@@ -137,4 +137,13 @@ public abstract class NodeTree<T>
     public int getMaxNodes() {
         return _maxNodes;
     }
+
+    public void replaceNode(int nodeToReplace, Node<T> newNode) {
+        Node<T> nodeInTree = getNode(nodeToReplace);
+        nodeInTree = newNode;
+    }
+
+    public abstract boolean IsFull();
+
+    public abstract boolean requiresTerminals();
 }

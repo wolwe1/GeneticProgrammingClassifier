@@ -1,10 +1,12 @@
 package resources.gpLibrary.infrastructure.interfaces;
 
+import resources.gpLibrary.models.highOrder.implementation.PopulationMember;
+
 import java.util.List;
 
 public interface IGeneticOperator<T> {
 
-    List<String> operate(List<String> chromosomes);
+    List<String> operate(List<PopulationMember<T>> chromosomes);
 
     int getOutputCount();
 

@@ -54,4 +54,6 @@ public interface IPopulationManager<T> {
      * Replaces the currently stored population with the new population
      */
     void setNewPopulation();
+
+    ITreeGenerator<T> getTreeGenerator();
 }

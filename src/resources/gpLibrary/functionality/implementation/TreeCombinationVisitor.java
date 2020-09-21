@@ -1,7 +1,7 @@
 package resources.gpLibrary.functionality.implementation;
 
 import resources.gpLibrary.functionality.interfaces.ITreeVisitor;
-import resources.gpLibrary.models.primitives.implementation.Node;
+import resources.gpLibrary.models.primitives.nodes.abstractClasses.Node;
 
 import java.util.ArrayList;
 import java.util.List;

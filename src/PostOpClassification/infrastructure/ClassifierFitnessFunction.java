@@ -4,26 +4,19 @@ import resources.gpLibrary.models.classification.ProblemSet;
 import resources.gpLibrary.models.highOrder.implementation.NodeTree;
 import resources.gpLibrary.models.highOrder.implementation.PopulationMember;
 import resources.gpLibrary.models.highOrder.interfaces.IMemberStatistics;
-import resources.gpLibrary.models.primitives.interfaces.IFitnessFunction;
+import resources.gpLibrary.models.primitives.IFitnessFunction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Measures the fitness of an individual by calculating how "far" it is from the correct classification, lower is better
  */
-public class ClassifierFitnessFunction implements IFitnessFunction<Integer> {
+public class ClassifierFitnessFunction<T> implements IFitnessFunction<T> {
 
-    List<Integer> answerSet;
-    List<ProblemSet> problemSet;
+    ProblemSet problemSet;
 
-    public ClassifierFitnessFunction(List<ProblemSet> problems){
+    public ClassifierFitnessFunction(ProblemSet problems){
         problemSet = problems;
-
-        answerSet = new ArrayList<>();
-        for (ProblemSet problem : problems) {
-            answerSet.add(problem.getAnswer());
-        }
     }
 
     @Override
@@ -32,7 +25,7 @@ public class ClassifierFitnessFunction implements IFitnessFunction<Integer> {
     }
 
     @Override
-    public IMemberStatistics calculateFitness(NodeTree<Integer> populationMember) {
+    public IMemberStatistics calculateFitness(NodeTree<T> populationMember) {
         return null;
     }
 
@@ -43,12 +36,12 @@ public class ClassifierFitnessFunction implements IFitnessFunction<Integer> {
     }
 
     @Override
-    public PopulationMember<Integer> getFittest(List<PopulationMember<Integer>> list) {
+    public PopulationMember<T> getFittest(List<PopulationMember<T>> list) {
         int bestFitness = Integer.MAX_VALUE;
         int bestIndex = 0;
 
         for (int i = 0; i < list.size(); i++) {
-            PopulationMember<Integer> member = list.get(i);
+            PopulationMember<T> member = list.get(i);
 
             if(member.getFitness() < bestFitness){
                 bestFitness = (int) member.getFitness();

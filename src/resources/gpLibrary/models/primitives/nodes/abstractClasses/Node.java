@@ -1,7 +1,7 @@
-package resources.gpLibrary.models.primitives.implementation;
+package resources.gpLibrary.models.primitives.nodes.abstractClasses;
 
-import resources.gpLibrary.models.classification.ProblemSet;
-import resources.gpLibrary.models.primitives.interfaces.IValueNode;
+
+import resources.gpLibrary.models.primitives.nodes.implementation.TerminalNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * This class represents a node that can have multiple children and a parent
  * @param <T> The type of the value stored by the node
  */
-public abstract class Node<T> implements IValueNode<T>
+public abstract class Node<T>
 {
     protected final List<Node<T>> _children;
 
@@ -21,7 +21,7 @@ public abstract class Node<T> implements IValueNode<T>
     public int _drawPos = 0;
     public int _depth = 0;
 
-    protected Node(int maxChildren,String name)
+    protected Node(String name,int maxChildren)
     {
         _maxChildren = maxChildren;
         this.name = name;
@@ -126,4 +126,7 @@ public abstract class Node<T> implements IValueNode<T>
         }
     }
 
+    public abstract boolean canTakeMoreChildren();
+
+    public abstract boolean requiresTerminals();
 }

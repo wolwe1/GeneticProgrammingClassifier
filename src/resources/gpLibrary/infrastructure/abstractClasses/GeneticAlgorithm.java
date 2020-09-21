@@ -1,7 +1,7 @@
-package resources.gpLibrary.infrastructure.interfaces;
+package resources.gpLibrary.infrastructure.abstractClasses;
 
 import resources.gpLibrary.helpers.Printer;
-import resources.gpLibrary.infrastructure.implementation.operators.RandomPopulationMemberGenerator;
+import resources.gpLibrary.infrastructure.implementation.operators.Create;
 import resources.gpLibrary.infrastructure.interfaces.IGeneticAlgorithm;
 import resources.gpLibrary.infrastructure.interfaces.IGeneticOperator;
 import resources.gpLibrary.infrastructure.interfaces.IPopulationManager;
@@ -24,7 +24,6 @@ public class GeneticAlgorithm<T> implements IGeneticAlgorithm<T> {
      * Sets the values necessary for the genetic algorithm to operate
      * @param populationSize The size of the population to manage
      * @param numberOfGenerations The number of generations the algorithm runs for
-     * @param printLevel The level of print out to be displayed
      */
     public GeneticAlgorithm(int populationSize,int numberOfGenerations,IPopulationManager<T> populationManager){
         _populationSize = populationSize;
@@ -35,7 +34,7 @@ public class GeneticAlgorithm<T> implements IGeneticAlgorithm<T> {
         _printLevel = PrintLevel.ALL;
 
         _operators = new HashMap<>();
-        _operators.put("Random", new RandomPopulationMemberGenerator<>(0d, populationSize));
+        _operators.put("Random", Create.create(populationSize,0d,_populationManager.getTreeGenerator()));
     }
 
     /**

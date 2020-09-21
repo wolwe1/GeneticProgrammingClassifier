@@ -1,4 +1,4 @@
-package resources.gpLibrary.models.primitives.interfaces;
+package resources.gpLibrary.models.primitives.nodes.interfaces;
 
 public interface IValueNode<T> {
 

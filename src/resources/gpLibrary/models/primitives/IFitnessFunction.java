@@ -1,4 +1,4 @@
-package resources.gpLibrary.models.primitives.interfaces;
+package resources.gpLibrary.models.primitives;
 
 import resources.gpLibrary.models.highOrder.implementation.NodeTree;
 import resources.gpLibrary.models.highOrder.implementation.PopulationMember;

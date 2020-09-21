@@ -1,6 +1,7 @@
-package resources.gpLibrary.models.primitives.implementation;
+package resources.gpLibrary.models.primitives.nodes.implementation;
 
-import resources.gpLibrary.models.primitives.interfaces.IValueNode;
+import resources.gpLibrary.models.primitives.nodes.abstractClasses.Node;
+import resources.gpLibrary.models.primitives.nodes.interfaces.IValueNode;
 
 public abstract class TerminalNode<T> extends Node<T> implements IValueNode<T>{
 

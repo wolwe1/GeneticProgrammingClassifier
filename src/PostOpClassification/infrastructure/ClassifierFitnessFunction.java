@@ -1,5 +1,8 @@
 package PostOpClassification.infrastructure;
 
+import resources.gpLibrary.models.classification.ClassificationStatistic;
+import resources.gpLibrary.models.classification.ClassificationTree;
+import resources.gpLibrary.models.classification.Problem;
 import resources.gpLibrary.models.classification.ProblemSet;
 import resources.gpLibrary.models.highOrder.implementation.NodeTree;
 import resources.gpLibrary.models.highOrder.implementation.PopulationMember;
@@ -13,9 +16,9 @@ import java.util.List;
  */
 public class ClassifierFitnessFunction<T> implements IFitnessFunction<T> {
 
-    ProblemSet problemSet;
+    ProblemSet<T> problemSet;
 
-    public ClassifierFitnessFunction(ProblemSet problems){
+    public ClassifierFitnessFunction(ProblemSet<T> problems){
         problemSet = problems;
     }
 
@@ -26,7 +29,28 @@ public class ClassifierFitnessFunction<T> implements IFitnessFunction<T> {
 
     @Override
     public IMemberStatistics calculateFitness(NodeTree<T> populationMember) {
-        return null;
+        ClassificationTree<T> tree = (ClassificationTree<T>) populationMember;
+        IMemberStatistics treeStats = new ClassificationStatistic();
+
+        double accuracy = 0;
+        double hits = 0;
+
+        List<Problem<T>> problems = problemSet.getProblems();
+        int totalProblems = problems.size();
+
+        for (Problem<T> problem : problems) {
+            T answer = problem.getAnswer();
+            T guess = tree.feedProblem(problem);
+
+            if(answer == guess)
+                hits++;
+        }
+        accuracy = hits/totalProblems;
+
+        treeStats.setMeasure("Accuracy",accuracy);
+        treeStats.setMeasure("Hits",hits);
+
+        return treeStats;
     }
 
 

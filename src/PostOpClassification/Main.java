@@ -3,6 +3,7 @@ package PostOpClassification;
 import PostOpClassification.nodes.PatientResult;
 import PostOpClassification.nodes.PatientVitalsFunction;
 import PostOpClassification.infrastructure.ClassifierFitnessFunction;
+import PostOpClassification.nodes.PatientVitalsFunctionSingleValue;
 import resources.gpLibrary.infrastructure.implementation.TreePopulationManager;
 import resources.gpLibrary.infrastructure.implementation.operators.Crossover;
 import resources.gpLibrary.infrastructure.implementation.operators.LazyReproduction;
@@ -42,19 +43,19 @@ public class Main {
         fileManager.setupDirectories();
 
         //Create fitness function
-        ProblemSet problemSet = new ProblemSet(fileManager.getData(), Arrays.asList(dataNames.split(",")));
+        ProblemSet<String> problemSet = new ProblemSet<>(fileManager.getData(), Arrays.asList(dataNames.split(",")),"ADM-DECS");
         IFitnessFunction<String> fitnessFunction = new ClassifierFitnessFunction<>(problemSet);
 
         //Create node sets
         FunctionalSet<String> functionalSet = new FunctionalSet<>();
-        functionalSet.addFunction(new PatientVitalsFunction("L-CORE","L-CORE",3));
-        functionalSet.addFunction(new PatientVitalsFunction("L-SURF","L-SURF",3));
-        functionalSet.addFunction(new PatientVitalsFunction("L-O2","L-O2",4));
-        functionalSet.addFunction(new PatientVitalsFunction("L-BP","L-BP",3));
-        functionalSet.addFunction(new PatientVitalsFunction("SURF-STBL","SURF-STBL",3));
-        functionalSet.addFunction(new PatientVitalsFunction("CORE-STBL","CORE-STBL",3));
-        functionalSet.addFunction(new PatientVitalsFunction("BP-STBL","BP-STBL",3));
-        functionalSet.addFunction(new PatientVitalsFunction("COMFORT","COMFORT",3)); //TODO: This is a special case where a choice must be created from a single number
+        functionalSet.addFunction(new PatientVitalsFunction("L-CORE","L-CORE",Arrays.asList("high","mid","low")));
+        functionalSet.addFunction(new PatientVitalsFunction("L-SURF","L-SURF",Arrays.asList("high","mid","low")));
+        functionalSet.addFunction(new PatientVitalsFunction("L-O2","L-O2",Arrays.asList("excellent","good","fair","poor")));
+        functionalSet.addFunction(new PatientVitalsFunction("L-BP","L-BP",Arrays.asList("high","mid","low")));
+        functionalSet.addFunction(new PatientVitalsFunction("SURF-STBL","SURF-STBL",Arrays.asList("stable","mod-stable","unstable")));
+        functionalSet.addFunction(new PatientVitalsFunction("CORE-STBL","CORE-STBL",Arrays.asList("stable","mod-stable","unstable")));
+        functionalSet.addFunction(new PatientVitalsFunction("BP-STBL","BP-STBL",Arrays.asList("stable","mod-stable","unstable")));
+        functionalSet.addFunction(new PatientVitalsFunctionSingleValue("COMFORT","COMFORT",Arrays.asList("7","15","20"))); //TODO: This is a special case where a choice must be created from a single number
 
         TerminalSet<String> terminalSet = new TerminalSet<>();
         terminalSet.addTerminal(new PatientResult("I"));

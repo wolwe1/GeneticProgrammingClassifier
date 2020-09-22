@@ -15,24 +15,27 @@ public abstract class NodeTree<T>
     public final int maxBreadth;
 
     protected final int _maxNodes;
+    protected int numberOfNodes;
 
     public NodeTree(int maxDepth,int maxBreadth)
     {
         this.maxDepth = maxDepth;
         this.maxBreadth = maxBreadth;
         depth = 0;
+        numberOfNodes = 0;
         //root = null;
         _maxNodes = calculateMaximumSize(maxBreadth,maxDepth);
     }
 
     /**
      * Creates a tree with the same specification as the other, does not copy nodes
-     * @param other
+     * @param other The tree to copy
      */
     public NodeTree(NodeTree<T> other){
         this.maxDepth = other.maxDepth;
         this.maxBreadth = other.maxBreadth;
         this.depth = other.depth;
+        this.numberOfNodes = other.numberOfNodes;
         //root = null;
         _maxNodes = other._maxNodes;
     }

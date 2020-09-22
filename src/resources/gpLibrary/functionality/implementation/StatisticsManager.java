@@ -15,7 +15,7 @@ public class StatisticsManager {
         Map<String,Double> measures = new HashMap<>();
         var possibleMeasures = populationStatistics.get(0).getMeasures();
 
-        for (Map.Entry<String,Double> measure : possibleMeasures){
+        for (Map.Entry<String,Double> measure : possibleMeasures.entrySet()){
             //Set a measure of 0
             Map.Entry<String,Double> averageForMeasure = new AbstractMap.SimpleEntry<>(measure.getKey(), 0d);
 

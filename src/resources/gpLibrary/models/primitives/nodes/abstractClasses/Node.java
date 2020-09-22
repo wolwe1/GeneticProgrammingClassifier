@@ -128,5 +128,7 @@ public abstract class Node<T>
 
     public abstract boolean canTakeMoreChildren();
 
-    public abstract boolean requiresTerminals();
+    public abstract boolean requiresTerminals(int maxDepth);
+
+    public abstract boolean hasAncestor(Node<T> nodeToAdd);
 }

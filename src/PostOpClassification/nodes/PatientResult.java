@@ -26,6 +26,23 @@ public class PatientResult extends ChoiceNode<String> {
     }
 
     @Override
+    public boolean requiresTerminals(int maxDepth) {
+        return false;
+        //throw new RuntimeException("Terminal asked if required terminals");
+    }
+
+    @Override
+    public boolean hasAncestor(Node<String> nodeToAdd) {
+        if(nodeToAdd.name.equals(this.name))
+            return true;
+
+        if(this.Parent == null)
+            return false;
+
+        return this.Parent.hasAncestor(nodeToAdd);
+    }
+
+    @Override
     public String feed(Problem problem) {
         return name;
     }

@@ -20,7 +20,7 @@ public class ClassificationTree<T> extends NodeTree<T> {
         super(other);
     }
 
-    public T feedProblem(Problem problem){
+    public T feedProblem(Problem<T> problem){
         return root.feed(problem);
     }
 
@@ -47,6 +47,7 @@ public class ClassificationTree<T> extends NodeTree<T> {
         {
             breadthFirstInsert(node);
         }
+        numberOfNodes++;
     }
 
     @Override
@@ -105,12 +106,47 @@ public class ClassificationTree<T> extends NodeTree<T> {
 
     @Override
     public boolean IsFull() {
+        if(root == null)
+            return false;
+
         return !root.canTakeMoreChildren();
     }
 
     @Override
     public boolean requiresTerminals() {
-        return root.requiresTerminals();
+        if(root == null)
+            return false;
+
+        return root.requiresTerminals(maxDepth - 1);
     }
 
+    /**
+     * Enforces branch uniqueness
+     * @param nodeToAdd The node attempting to be added
+     * @return Whether or not the node is unique in the current addition branch
+     */
+    public boolean acceptsNode(Node<T> nodeToAdd) {
+        Node<T> nodeThatWillAcceptChild = getNextNodeForInsert();
+        return !nodeThatWillAcceptChild.hasAncestor(nodeToAdd);
+    }
+
+    private Node<T> getNextNodeForInsert() {
+
+        Queue<Node<T>> queue = new ArrayDeque<>();
+        Node<T> temp;
+
+        queue.add(root);
+
+        while (queue.size() != 0)
+        {
+            temp = queue.remove();
+
+            if (!temp.IsFull())
+            {
+                return temp;
+            }
+            queue.addAll(temp.getChildren());
+        }
+        throw new RuntimeException("No node available to accept children");
+    }
 }

@@ -11,9 +11,11 @@ public interface IMemberStatistics {
      */
     Double getFitness();
 
-    Map.Entry<String, Double>[] getMeasures();
+    Map<String, Double> getMeasures();
 
     Map.Entry<String, Double> getMeasure(String key);
 
     void print();
+
+    void setMeasure(String key, double value);
 }

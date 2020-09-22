@@ -9,20 +9,21 @@ public abstract class IFeedDownFunction<T> extends ChoiceNode<T> {
 
     protected String matchField;
 
-    protected List<String> choices;
+    protected List<T> choices;
 
-    protected IFeedDownFunction(String matchField,String name,int numberOfChoices) {
-        super(name,numberOfChoices);
+    protected IFeedDownFunction(String matchField,String name, List<T> choices) {
+        super(name,choices.size());
         this.matchField = matchField;
+        this.choices = choices;
     }
     
     @Override
-    public T feed(Problem problem){
+    public T feed(Problem<T> problem){
 
-        String valueToSwitchOn = problem.getValue(matchField);
+        String valueToSwitchOn = (String) problem.getValue(matchField);
 
         for (int i = 0, choicesSize = choices.size(); i < choicesSize; i++) {
-            String choice = choices.get(i);
+            T choice = choices.get(i);
             ChoiceNode<T> child = (ChoiceNode<T>) _children.get(i);
 
             if(choice.equals(valueToSwitchOn))

@@ -33,14 +33,23 @@ public class ClassificationTreeGenerator<T> implements ITreeGenerator<T> {
     @Override
     public NodeTree<T> createRandom() {
         ClassificationTree<T> newTree = new ClassificationTree<>(maxTreeDepth,maxTreeBreadth);
-        int maxTreeSize = newTree.getMaxNodes();
+        try {
+            newTree.addNode(pickFunction());
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to create tree root");
+        }
         //TODO: Ensure branch uniqueness
         while (!newTree.IsFull()) {
             try {
                 if(newTree.requiresTerminals())
                     newTree.addNode(pickTerminal());
                 else{
-                    newTree.addNode(pickNode());
+                    Node<T> nodeToAdd = pickNode();
+
+                    while(!newTree.acceptsNode(nodeToAdd)){
+                        nodeToAdd = pickNode();
+                    }
+                    newTree.addNode(nodeToAdd);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

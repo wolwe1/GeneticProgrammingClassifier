@@ -2,24 +2,26 @@ package resources.gpLibrary.models.classification;
 
 import java.util.HashMap;
 
-public class Problem {
+public class Problem<T> {
 
-    private Integer _answer;
-    private final HashMap<String,String> items;
+    private T _answer;
+    private final HashMap<String,T> items;
+    private String answerField;
 
-    public Problem() {
+    public Problem(String answerField) {
         items = new HashMap<>();
+        this.answerField = answerField;
     }
 
-    public void addItem(String descriptor, String value){
+    public void addItem(String descriptor, T value){
         items.put(descriptor,value);
     }
 
-    public Integer getAnswer() {
-        return _answer;
+    public T getAnswer() {
+        return items.get(answerField);
     }
 
-    public String getValue(String matchField) {
+    public T getValue(String matchField) {
         return items.get(matchField);
     }
 }

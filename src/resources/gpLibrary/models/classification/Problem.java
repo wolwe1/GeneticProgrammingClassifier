@@ -24,4 +24,8 @@ public class Problem<T> {
     public T getValue(String matchField) {
         return items.get(matchField);
     }
+
+    public void setValue(String field, T value) {
+        items.put(field,value);
+    }
 }

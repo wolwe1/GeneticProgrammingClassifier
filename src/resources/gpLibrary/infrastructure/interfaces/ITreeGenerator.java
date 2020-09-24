@@ -14,7 +14,7 @@ public interface ITreeGenerator<T> {
 
     void setRandomFunction(Random randomNumberGenerator);
 
-    String replaceSubTree(PopulationMember<T> chromosome);
+    NodeTree<T> replaceSubTree(PopulationMember<T> chromosome);
 
-    List<String> replaceSubTrees(PopulationMember<T> first, PopulationMember<T> second);
+    List<NodeTree<T>> replaceSubTrees(PopulationMember<T> first, PopulationMember<T> second);
 }

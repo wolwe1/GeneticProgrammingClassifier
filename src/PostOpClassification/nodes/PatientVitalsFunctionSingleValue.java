@@ -14,7 +14,7 @@ public class PatientVitalsFunctionSingleValue extends IFeedDownFunction<String> 
 
     @Override
     protected Node<String> getCopy() {
-        PatientVitalsFunction newFunction = new PatientVitalsFunction(this.matchField,this.name,this.choices);
+        PatientVitalsFunctionSingleValue newFunction = new PatientVitalsFunctionSingleValue(this.matchField,this.name,this.choices);
         return newFunction;
     }
 

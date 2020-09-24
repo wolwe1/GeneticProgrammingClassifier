@@ -18,13 +18,17 @@ public class ClassifierFitnessFunction<T> implements IFitnessFunction<T> {
 
     ProblemSet<T> problemSet;
 
+    /**
+     * Class assumes hit rate as fitness, therefore higher is better
+     * @param problems The problem set used for comparison
+     */
     public ClassifierFitnessFunction(ProblemSet<T> problems){
         problemSet = problems;
     }
 
     @Override
     public double getWorstPossibleValue() {
-        return Integer.MAX_VALUE;
+        return Integer.MIN_VALUE;
     }
 
     @Override
@@ -42,11 +46,11 @@ public class ClassifierFitnessFunction<T> implements IFitnessFunction<T> {
             T answer = problem.getAnswer();
             T guess = tree.feedProblem(problem);
 
-            if(answer == guess)
+            if(answer.equals(guess))
                 hits++;
         }
-        accuracy = hits/totalProblems;
-
+        accuracy = (hits/totalProblems) * 100;
+        accuracy = Math.round(accuracy * 100.0) / 100.0;
         treeStats.setMeasure("Accuracy",accuracy);
         treeStats.setMeasure("Hits",hits);
 
@@ -56,18 +60,18 @@ public class ClassifierFitnessFunction<T> implements IFitnessFunction<T> {
 
     @Override
     public boolean firstFitterThanSecond(double firstFitness, double secondFitness) {
-        return firstFitness < secondFitness;
+        return firstFitness > secondFitness;
     }
 
     @Override
     public PopulationMember<T> getFittest(List<PopulationMember<T>> list) {
-        int bestFitness = Integer.MAX_VALUE;
+        int bestFitness = Integer.MIN_VALUE;
         int bestIndex = 0;
 
         for (int i = 0; i < list.size(); i++) {
             PopulationMember<T> member = list.get(i);
 
-            if(member.getFitness() < bestFitness){
+            if(member.getFitness() > bestFitness){
                 bestFitness = (int) member.getFitness();
                 bestIndex = i;
             }

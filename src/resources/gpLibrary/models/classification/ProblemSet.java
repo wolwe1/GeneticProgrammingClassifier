@@ -23,6 +23,28 @@ public class ProblemSet<T> {
             }
             problems.add(problemEntry);
         }
+
+        replaceMissingValues();
+    }
+
+    private void replaceMissingValues() {
+        int total = 0;
+        int presentCount = 0;
+
+        for (Problem<T> problem : problems) {
+
+            if(!problem.getValue("COMFORT").equals("?") ){
+                total += Integer.parseInt((String) problem.getValue("COMFORT"));
+                presentCount++;
+            }
+        }
+
+        int average = total/presentCount;
+
+        for (Problem<T> problem : problems) {
+            if(problem.getValue("COMFORT").equals("?"))
+                problem.setValue("COMFORT",(T)Integer.toString(average));
+        }
     }
 
     public List<Problem<T>> getProblems() {

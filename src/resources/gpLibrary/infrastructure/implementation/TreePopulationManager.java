@@ -82,14 +82,11 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
 
         if(_populationStatistics.size() != _currentPopulation.size()) throw new RuntimeException("Population and statistics did not match");
 
+        var popstats = _populationHistory.get(_populationHistory.size() - 1);
 
-        for (int i = 0, populationStatisticsSize = _populationStatistics.size(); i < populationStatisticsSize; i++) {
-            IMemberStatistics populationStatistic = _populationStatistics.get(i);
-            PopulationMember<T> member = _currentPopulation.get(i);
-
-            Printer.print(member.getId());
-            populationStatistic.print();
-        }
+        Printer.print("Average performance of population");
+        popstats.print();
+        Printer.underline();
     }
 
     @Override
@@ -133,14 +130,12 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
             chosenMembers.add(chosenMember);
         }
 
-        List<String> newChromosomes = operator.operate(chosenMembers);
+        List<NodeTree<T>> newChromosomes = operator.operate(chosenMembers);
         //Create new trees from the new members
-        for (String newChromosome : newChromosomes) {
-            NodeTree<T> newTree = _generator.create(newChromosome);
-            PopulationMember<T> newMember = new PopulationMember<>(newTree);
+        for (NodeTree<T> newChromosome : newChromosomes) {
+            PopulationMember<T> newMember = new PopulationMember<>(newChromosome);
             _nextPopulation.add(newMember);
         }
-
     }
 
     @Override

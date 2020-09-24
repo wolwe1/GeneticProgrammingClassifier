@@ -39,24 +39,7 @@ public class ClassificationTreeGenerator<T> implements ITreeGenerator<T> {
             throw new RuntimeException("Unable to create tree root");
         }
         //TODO: Ensure branch uniqueness
-        while (!newTree.IsFull()) {
-            try {
-                if(newTree.requiresTerminals())
-                    newTree.addNode(pickTerminal());
-                else{
-                    Node<T> nodeToAdd = pickNode();
-
-                    while(!newTree.acceptsNode(nodeToAdd)){
-                        nodeToAdd = pickNode();
-                    }
-                    newTree.addNode(nodeToAdd);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("Unable to generate tree");
-            }
-        }
-        return newTree;
+        return fillTree(newTree);
     }
 
     private Node<T> pickNode() {
@@ -81,15 +64,14 @@ public class ClassificationTreeGenerator<T> implements ITreeGenerator<T> {
     @Override
     public NodeTree<T> create(String chromosome) {
         NodeTree<T> newTree = new ClassificationTree<>(maxTreeDepth,maxTreeBreadth);
+        String[] chromosomeItems = chromosome.split("\\.");
 
-        for(int i = 0, n = chromosome.length() ; i < n ; i++) {
-            String name = String.valueOf(chromosome.charAt(i));
-
-            try{
+        for (String name : chromosomeItems) {
+            try {
                 var function = functionalSet.get(name);
                 newTree.addNode(function);
 
-            }catch (Exception e){ //Chromosome item represents a terminal
+            } catch (Exception e) { //Chromosome item represents a terminal
 
                 try {
                     var terminal = terminals.get(name);
@@ -111,40 +93,39 @@ public class ClassificationTreeGenerator<T> implements ITreeGenerator<T> {
     }
 
     @Override
-    public String replaceSubTree(PopulationMember<T> chromosome) {
-        NodeTree<T> tree = chromosome.getTree();
+    public NodeTree<T> replaceSubTree(PopulationMember<T> chromosome) {
+        ClassificationTree<T> tree = (ClassificationTree<T>) chromosome.getTree();
         int pointToReplace = randomGenerator.nextInt(tree.getTreeSize());
-        int nodeToReplace = randomGenerator.nextInt(100);
 
+        Node<T> replacingNode = pickNode();
 
-        if(nodeToReplace < ratio){
+        tree.replaceNode(pointToReplace,replacingNode);
+        return fillTree(tree);
+    }
 
-            Node<T> terminal = terminals.get(randomGenerator.nextInt(terminals.size()));
+    private NodeTree<T> fillTree(ClassificationTree<T> tree) {
+        while (!tree.IsFull()) {
+            try {
+                if(tree.requiresTerminals())
+                    tree.addNode(pickTerminal());
+                else{
+                    Node<T> nodeToAdd = pickNode();
 
-            tree.replaceNode(pointToReplace,terminal);
-            chromosome.setTree(tree);
-            return chromosome.getId();
-        }else{
-            Node<T> function = functionalSet.get(randomGenerator.nextInt(functionalSet.size()));
-
-            while (!function.IsFull()){
-                Node<T> terminal = terminals.get(randomGenerator.nextInt(terminals.size()));
-                try {
-                    function.addChild(terminal);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("Unable to append child to function node while replacing subtree");
+                    while(!tree.acceptsNode(nodeToAdd)){
+                        nodeToAdd = pickNode();
+                    }
+                    tree.addNode(nodeToAdd);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Unable to generate tree");
             }
-            tree.replaceNode(pointToReplace,function);
-            chromosome.setTree(tree);
-            return chromosome.getId();
         }
-
+        return tree;
     }
 
     @Override
-    public List<String> replaceSubTrees(PopulationMember<T> first, PopulationMember<T> second) {
+    public List<NodeTree<T>> replaceSubTrees(PopulationMember<T> first, PopulationMember<T> second) {
         NodeTree<T> firstTree = first.getTree();
         NodeTree<T> secondTree = second.getTree();
 
@@ -157,15 +138,11 @@ public class ClassificationTreeGenerator<T> implements ITreeGenerator<T> {
         firstTree.replaceNode(pointToReplaceInFirst,secondSubTree);
         secondTree.replaceNode(pointToReplaceInSecond,firstSubtree);
 
-        first.setTree(firstTree);
-        second.setTree(secondTree);
-
-        List<String> newTrees = new ArrayList<>();
-        newTrees.add(first.getId());
-        newTrees.add(second.getId());
+        List<NodeTree<T>> newTrees = new ArrayList<>();
+        newTrees.add(firstTree);
+        newTrees.add(secondTree);
 
         return newTrees;
-
     }
 
     public void setTerminalToFunctionRatio(int percentage){

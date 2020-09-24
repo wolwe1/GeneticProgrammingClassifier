@@ -2,6 +2,7 @@ package resources.gpLibrary.infrastructure.implementation.operators;
 
 import resources.gpLibrary.infrastructure.abstractClasses.GeneticOperator;
 import resources.gpLibrary.infrastructure.interfaces.ITreeGenerator;
+import resources.gpLibrary.models.highOrder.implementation.NodeTree;
 import resources.gpLibrary.models.highOrder.implementation.PopulationMember;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class Crossover<T> extends GeneticOperator<T> {
 
     public static <T> Crossover<T> create(int populationSize, double percentageOfPopulation, ITreeGenerator<T> generator){
 
-        int inputCount = (int)(populationSize/percentageOfPopulation);
+        int inputCount = (int)(populationSize*percentageOfPopulation);
 
         //Ensure boundary
         while(inputCount % 2 != 0){
@@ -29,15 +30,15 @@ public class Crossover<T> extends GeneticOperator<T> {
     }
 
     @Override
-    public List<String> operate(List<PopulationMember<T>> chromosomes) {
+    public List<NodeTree<T>> operate(List<PopulationMember<T>> chromosomes) {
 
-        List<String> newTrees = new ArrayList<>();
+        List<NodeTree<T>> newTrees = new ArrayList<>();
 
         for (int i = 0; i < chromosomes.size(); i++) {
             PopulationMember<T> first = chromosomes.get(i++);
             PopulationMember<T> second = chromosomes.get(i);
             
-            List<String> crossoverTrees = generator.replaceSubTrees(first,second);
+            List<NodeTree<T>> crossoverTrees = generator.replaceSubTrees(first,second);
             newTrees.addAll(crossoverTrees);
         }
         return newTrees;

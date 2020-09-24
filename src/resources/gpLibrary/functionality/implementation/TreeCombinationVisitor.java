@@ -18,7 +18,7 @@ public class TreeCombinationVisitor<T> implements ITreeVisitor<T> {
 
         var ret = new StringBuilder();
         for (Node<T> visitedNode : _visitedNodes) {
-            ret.append(visitedNode.name);
+            ret.append(visitedNode.name).append(".");
         }
         return ret.toString();
     }

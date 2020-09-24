@@ -1,6 +1,7 @@
 package resources.gpLibrary.infrastructure.implementation.operators;
 
 import resources.gpLibrary.infrastructure.abstractClasses.GeneticOperator;
+import resources.gpLibrary.models.highOrder.implementation.NodeTree;
 import resources.gpLibrary.models.highOrder.implementation.PopulationMember;
 import resources.gpLibrary.models.primitives.IFitnessFunction;
 
@@ -20,7 +21,7 @@ public class LazyReproduction<T> extends GeneticOperator<T> {
     }
 
     public static <T> LazyReproduction<T> create(int tournamentSize, int populationSize, double percentageOfPopulation, IFitnessFunction<T> fitnessFunction){
-        int input = (int)Math.round(((double) populationSize/percentageOfPopulation));
+        int input = (int)Math.round(((double) populationSize*percentageOfPopulation));
 
         while (input % tournamentSize != 0)
             input--;
@@ -30,8 +31,8 @@ public class LazyReproduction<T> extends GeneticOperator<T> {
     }
 
     @Override
-    public List<String> operate(List<PopulationMember<T>> chromosomes) {
-        List<String> winners = new ArrayList<>();
+    public List<NodeTree<T>> operate(List<PopulationMember<T>> chromosomes) {
+        List<NodeTree<T>> winners = new ArrayList<>();
 
         for (int i = 0; i < chromosomes.size(); i++) {
             PopulationMember<T> chosenOne = chromosomes.get(i);
@@ -42,9 +43,8 @@ public class LazyReproduction<T> extends GeneticOperator<T> {
 
                 i++;
             }
-            winners.add(chosenOne.getId());
+            winners.add(chosenOne.getTree());
         }
-
         return winners;
     }
 }

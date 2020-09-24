@@ -2,6 +2,7 @@ package resources.gpLibrary.infrastructure.implementation.operators;
 
 import resources.gpLibrary.infrastructure.abstractClasses.GeneticOperator;
 import resources.gpLibrary.infrastructure.interfaces.ITreeGenerator;
+import resources.gpLibrary.models.highOrder.implementation.NodeTree;
 import resources.gpLibrary.models.highOrder.implementation.PopulationMember;
 
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ public class Mutation<T> extends GeneticOperator<T> {
     }
 
     @Override
-    public List<String> operate(List<PopulationMember<T>> chromosomes) {
+    public List<NodeTree<T>> operate(List<PopulationMember<T>> chromosomes) {
 
-        List<String> mutatedChromosomes = new ArrayList<>();
+        List<NodeTree<T>> mutatedChromosomes = new ArrayList<>();
 
         for (PopulationMember<T> chromosome : chromosomes) {
             mutatedChromosomes.add(generator.replaceSubTree(chromosome));

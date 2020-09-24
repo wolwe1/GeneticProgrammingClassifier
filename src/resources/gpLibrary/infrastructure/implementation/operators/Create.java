@@ -29,13 +29,13 @@ public class Create<T> extends GeneticOperator<T> {
     }
 
     @Override
-    public List<String> operate(List<PopulationMember<T>> chromosomes) {
+    public List<NodeTree<T>> operate(List<PopulationMember<T>> chromosomes) {
 
-        List<String> newChromosomes = new ArrayList<>();
+        List<NodeTree<T>> newChromosomes = new ArrayList<>();
 
         for (int i = 0; i < outputCount; i++) {
             NodeTree<T> tree = generator.createRandom();
-            newChromosomes.add(tree.getCombination());
+            newChromosomes.add(tree);
         }
 
         return newChromosomes;

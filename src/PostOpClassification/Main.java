@@ -32,7 +32,7 @@ public class Main {
     //8. COMFORT (patient's perceived comfort at discharge, measured as an integer between 0 and 20)
     //9. decision ADM-DECS (discharge decision): I (patient sent to Intensive Care Unit),S (patient prepared to go home),
     //A (patient sent to general hospital floor)
-    static String dataNames = "L-CORE,L-SURF,L-O2,L-O2,SURF-STBL,CORE-STBL,BP-STBL,COMFORT,ADM-DECS";
+    static String dataNames = "L-CORE,L-SURF,L-O2,L-BP,SURF-STBL,CORE-STBL,BP-STBL,COMFORT,ADM-DECS";
 
     public static void main(String[] args) {
         int seed = 0;

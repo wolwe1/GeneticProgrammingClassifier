@@ -145,10 +145,12 @@ public class GeneticAlgorithm<T> implements IGeneticAlgorithm<T> {
         Printer.print("Best performing member:" + member.getId());
         Printer.underline();
 
-        if(_printLevel == PrintLevel.MAJOR) return;
 
         Printer.print("Statistics:");
         _populationManager.printPopulationStatistics();
+
+        if(_printLevel == PrintLevel.MAJOR) return;
+        _populationManager.printPopulationComposition();
         Printer.printLine();
     }
 

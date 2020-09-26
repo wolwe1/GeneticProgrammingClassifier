@@ -11,21 +11,17 @@ import java.util.List;
 public class Create<T> extends GeneticOperator<T> {
 
     private final ITreeGenerator<T> generator;
-    private double percentageOfPopulation;
-    private int _populationSize;
-    private int outputCount;
 
-    protected Create(int populationSize, double percentageOfPopulation,int outputCount,ITreeGenerator<T> generator) {
+    protected Create(int populationSize,int outputCount,ITreeGenerator<T> generator) {
         super("Create",0,outputCount,populationSize);
-        this.percentageOfPopulation = percentageOfPopulation;
-        this._populationSize = populationSize;
+        this.populationSize = populationSize;
         this.outputCount = outputCount;
         this.generator = generator;
     }
 
     public static <T> Create<T> create(int populationSize, double percentageOfPopulation, ITreeGenerator<T> generator){
         int outputCount = (int) (percentageOfPopulation * populationSize);
-        return new Create<>(populationSize,percentageOfPopulation,outputCount,generator);
+        return new Create<>(populationSize,outputCount,generator);
     }
 
     @Override

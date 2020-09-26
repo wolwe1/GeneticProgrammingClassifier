@@ -95,7 +95,7 @@ public class ClassificationTreeGenerator<T> implements ITreeGenerator<T> {
     @Override
     public NodeTree<T> replaceSubTree(PopulationMember<T> chromosome) {
         ClassificationTree<T> tree = (ClassificationTree<T>) chromosome.getTree();
-        int pointToReplace = randomGenerator.nextInt(tree.getTreeSize());
+        int pointToReplace = randomGenerator.nextInt(tree.getTreeSize() - 1) + 1;
 
         Node<T> replacingNode = pickNode();
 
@@ -129,8 +129,8 @@ public class ClassificationTreeGenerator<T> implements ITreeGenerator<T> {
         NodeTree<T> firstTree = first.getTree();
         NodeTree<T> secondTree = second.getTree();
 
-        int pointToReplaceInFirst = randomGenerator.nextInt(firstTree.getTreeSize());
-        int pointToReplaceInSecond = randomGenerator.nextInt(secondTree.getTreeSize());
+        int pointToReplaceInFirst = randomGenerator.nextInt(firstTree.getTreeSize() - 1) + 1;
+        int pointToReplaceInSecond = randomGenerator.nextInt(secondTree.getTreeSize() - 1) + 1;
 
         Node<T> firstSubtree = firstTree.getNode(pointToReplaceInFirst);
         Node<T> secondSubTree = secondTree.getNode(pointToReplaceInSecond);

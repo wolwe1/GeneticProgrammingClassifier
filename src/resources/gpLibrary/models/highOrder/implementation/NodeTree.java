@@ -141,10 +141,7 @@ public abstract class NodeTree<T>
         return _maxNodes;
     }
 
-    public void replaceNode(int nodeToReplace, Node<T> newNode) {
-        Node<T> nodeInTree = getNode(nodeToReplace);
-        nodeInTree = newNode;
-    }
+    public abstract void replaceNode(int nodeToReplace, Node<T> newNode);
 
     public abstract boolean IsFull();
 

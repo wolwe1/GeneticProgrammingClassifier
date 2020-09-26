@@ -20,6 +20,7 @@ public abstract class Node<T>
     public int _level = 0;
     public int _drawPos = 0;
     public int _depth = 0;
+    public int index = 0;
 
     protected Node(String name,int maxChildren)
     {
@@ -50,6 +51,7 @@ public abstract class Node<T>
 
         newNode.Parent = this;
         newNode._level = _level + 1;
+        newNode.index = _children.size();
         _children.add(newNode);
 
         return newNode;
@@ -57,7 +59,7 @@ public abstract class Node<T>
 
     public List<Node<T>> getChildren(){ return _children; }
 
-    public Node<T> getChild(int index) throws Exception {
+    public Node<T> getChild(int index){
         if (index >= _children.size())
             return null;
 
@@ -68,11 +70,12 @@ public abstract class Node<T>
 
     protected abstract Node<T> getCopy();
 
-    public void setChild(int index,Node<T> newChild) throws Exception {
+    public void setChild(int index,Node<T> newChild){
         if(index < 0 || index >= _maxChildren)
-            throw new Exception("Attempted to set a child out of range");
+            throw new RuntimeException("Attempted to set a child out of range");
 
         newChild.Parent = this;
+        newChild.index = index;
         _children.set(index,newChild);
     }
 
@@ -131,4 +134,5 @@ public abstract class Node<T>
     public abstract boolean requiresTerminals(int maxDepth);
 
     public abstract boolean hasAncestor(Node<T> nodeToAdd);
+
 }

@@ -32,10 +32,29 @@ public class StatisticsManager {
 
         for (Map.Entry<String, Double> measure : measures.entrySet()) {
             measure.setValue( measure.getValue()/populationStatistics.size());
-            averagePopStats.addMeasure(measure);
+            averagePopStats.setMeasure(measure.getKey(),measure.getValue());
         }
 
         return averagePopStats;
 
+    }
+
+    public static PopulationStatistics calculateChange(PopulationStatistics start, PopulationStatistics stop) {
+
+        PopulationStatistics change = new PopulationStatistics();
+
+        for (Map.Entry<String, Double> measure : start.getMeasures().entrySet()) {
+            double startValue = measure.getValue();
+            double stopValue = stop.getMeasure(measure.getKey()).getValue();
+
+            double difference = stopValue - startValue;
+
+            double percentageIncrease = (difference / startValue) * 100;
+            percentageIncrease = Math.round( percentageIncrease * 100d) / 100d;
+
+            change.setMeasure("Percentage change in " + measure.getKey(),percentageIncrease);
+        }
+
+        return change;
     }
 }

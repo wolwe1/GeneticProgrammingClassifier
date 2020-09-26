@@ -105,6 +105,20 @@ public class ClassificationTree<T> extends NodeTree<T> {
     }
 
     @Override
+    public void replaceNode(int nodeToReplace, Node<T> newNode) {
+
+//        if(nodeToReplace == 0){
+//
+//            root = (ChoiceNode<T>) newNode;
+//            root._level = 0;
+//        }else{
+            Node<T> nodeInTree = getNode(nodeToReplace);
+            nodeInTree.Parent.setChild(nodeInTree.index,newNode);
+        //}
+
+    }
+
+    @Override
     public boolean IsFull() {
         if(root == null)
             return false;

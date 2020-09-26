@@ -35,11 +35,6 @@ public interface IPopulationManager<T> {
     void printBasicHistory();
 
     /**
-     * Prints the basic history as well as the change in composition of its members
-     */
-    void printFullHistory();
-
-    /**
      * Resets the state of the population manager, clearing the population,history and statistics
      */
     void reset();
@@ -56,4 +51,8 @@ public interface IPopulationManager<T> {
     void setNewPopulation();
 
     ITreeGenerator<T> getTreeGenerator();
+
+    void printPopulationComposition();
+
+    void printFullHistory();
 }

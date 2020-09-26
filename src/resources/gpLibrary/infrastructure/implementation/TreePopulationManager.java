@@ -11,9 +11,7 @@ import resources.gpLibrary.models.highOrder.implementation.PopulationStatistics;
 import resources.gpLibrary.models.highOrder.interfaces.IMemberStatistics;
 import resources.gpLibrary.models.primitives.IFitnessFunction;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class TreePopulationManager<T> implements IPopulationManager<T> {
 
@@ -26,6 +24,7 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
     //Statistics
     protected List<IMemberStatistics> _populationStatistics;
     protected List<PopulationStatistics> _populationHistory;
+    private  List<PopulationStatistics> compositionHistory;
 
 
     public TreePopulationManager(ITreeGenerator<T> treeGenerator, IFitnessFunction<T> fitnessFunction,int seed){
@@ -39,6 +38,7 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
         _nextPopulation = new ArrayList<>();
         _populationStatistics = new ArrayList<>();
         _populationHistory = new ArrayList<>();
+        compositionHistory = new ArrayList<>();
     }
 
     @Override
@@ -48,15 +48,9 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
             NodeTree<T> newTree = _generator.createRandom();
             PopulationMember<T> newMember = new PopulationMember<>(newTree);
 
-            IMemberStatistics memberStatistics = _fitnessFunction.calculateFitness(newMember.getTree());
-            newMember.setFitness(memberStatistics.getFitness());
-
-            _currentPopulation.add(newMember);
-            _populationStatistics.add(memberStatistics);
+            _nextPopulation.add(newMember);
         }
-        PopulationStatistics populationStatistics = StatisticsManager.calculateAverages(_populationStatistics);
-
-        _populationHistory.add(populationStatistics);
+        setNewPopulation();
     }
 
     @Override
@@ -80,30 +74,72 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
     @Override
     public void printPopulationStatistics() {
 
-        if(_populationStatistics.size() != _currentPopulation.size()) throw new RuntimeException("Population and statistics did not match");
-
         var popstats = _populationHistory.get(_populationHistory.size() - 1);
 
-        Printer.print("Average performance of population");
         popstats.print();
         Printer.underline();
     }
 
     @Override
     public void printBasicHistory() {
+        PopulationStatistics changeOverRun = StatisticsManager.calculateChange(_populationHistory.get(0),_populationHistory.get(_populationHistory.size() - 1));
+        changeOverRun.print();
+    }
 
-        for (int i = 0, historySize = _populationHistory.size(); i < historySize; i++) {
-            PopulationStatistics historyStat = _populationHistory.get(i);
-            PopulationMember<T> member = _currentPopulation.get(i);
+    @Override
+    public void printPopulationComposition() {
 
-            Printer.print(member.getId());
-            historyStat.print();
-        }
+        var latestTreeComp = compositionHistory.get(compositionHistory.size() - 1);
+        Printer.print("Tree composition");
+        latestTreeComp.print();
+        Printer.underline();
     }
 
     @Override
     public void printFullHistory() {
+        printBasicHistory();
 
+        Printer.print("\nComposition change");
+        Printer.underline();
+        PopulationStatistics changeInComposition =
+        StatisticsManager.calculateChange(compositionHistory.get(0),compositionHistory.get(compositionHistory.size() - 1));
+
+        changeInComposition.print();
+        Printer.underline();
+    }
+
+    private HashMap<String, Double> getTreeComposition() {
+        HashMap<String,Integer> chromosomeFrequency = new HashMap<>();
+        HashMap<String,Double> percentageComposition = new HashMap<>();
+        int numItems = 0;
+
+        for (PopulationMember<T> member : _currentPopulation) {
+            String comp = member.getId();
+            String[] items = comp.split("\\.");
+            numItems += items.length;
+
+            for (String item : items) {
+                chromosomeFrequency.merge(item, 1, Integer::sum);
+            }
+        }
+
+        for (Map.Entry<String, Integer> item : chromosomeFrequency.entrySet()) {
+            double percentageValue = Math.round( (((double)item.getValue() / numItems) * 100d) * 100d)/100d;
+            percentageComposition.put(item.getKey(),percentageValue);
+        }
+
+        return percentageComposition;
+    }
+
+    private double getAverageTreeSize(){
+
+        double averageTreeSize = 0;
+        for (PopulationMember<T> populationMember : _currentPopulation) {
+            averageTreeSize += populationMember.getTree().getTreeSize();
+        }
+        averageTreeSize = averageTreeSize / _currentPopulation.size();
+
+        return averageTreeSize;
     }
 
     @Override
@@ -142,6 +178,26 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
     public void setNewPopulation() {
         _currentPopulation = _nextPopulation;
         _nextPopulation = new ArrayList<>();
+
+        for (PopulationMember<T> member : _currentPopulation) {
+            IMemberStatistics memberStatistics = _fitnessFunction.calculateFitness(member.getTree());
+            member.setFitness(memberStatistics.getFitness());
+            _populationStatistics.add(memberStatistics);
+        }
+
+        PopulationStatistics populationStatistics = StatisticsManager.calculateAverages(_populationStatistics);
+        _populationHistory.add(populationStatistics);
+
+        double averageTreeSize = getAverageTreeSize();
+        var treeComposition = getTreeComposition();
+
+        var stats = new PopulationStatistics();
+        stats.setMeasure("Tree size",averageTreeSize);
+
+        for (Map.Entry<String, Double> item : treeComposition.entrySet()) {
+            stats.setMeasure(item.getKey(),item.getValue());
+        }
+        compositionHistory.add(stats);
     }
 
     @Override

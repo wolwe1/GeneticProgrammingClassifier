@@ -36,8 +36,8 @@ public class Main {
 
     public static void main(String[] args) {
         int seed = 0;
-        int populationSize = 10;
-        int numberOfGenerations = 1;
+        int populationSize = 500;
+        int numberOfGenerations = 150;
 
         FileManager fileManager = new FileManager();
         fileManager.setupDirectories();

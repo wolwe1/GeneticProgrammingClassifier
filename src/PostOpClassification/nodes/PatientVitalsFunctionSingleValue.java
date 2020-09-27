@@ -14,8 +14,7 @@ public class PatientVitalsFunctionSingleValue extends IFeedDownFunction<String> 
 
     @Override
     protected Node<String> getCopy() {
-        PatientVitalsFunctionSingleValue newFunction = new PatientVitalsFunctionSingleValue(this.matchField,this.name,this.choices);
-        return newFunction;
+        return new PatientVitalsFunctionSingleValue(this.matchField, this.name, this.choices);
     }
 
     @Override
@@ -55,6 +54,19 @@ public class PatientVitalsFunctionSingleValue extends IFeedDownFunction<String> 
             return false;
 
         return this.Parent.hasAncestor(nodeToAdd);
+    }
+
+    public boolean isValid() {
+
+        if(_children.size() != _maxChildren)
+            return false;
+
+        for (Node<String> child : _children) {
+            if(!child.isValid())
+                return false;
+        }
+
+        return true;
     }
 
     @Override

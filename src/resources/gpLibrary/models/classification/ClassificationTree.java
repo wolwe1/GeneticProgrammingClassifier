@@ -134,6 +134,11 @@ public class ClassificationTree<T> extends NodeTree<T> {
         return root.requiresTerminals(maxDepth - 1);
     }
 
+    @Override
+    public boolean isValid() {
+        return root.isValid();
+    }
+
     /**
      * Enforces branch uniqueness
      * @param nodeToAdd The node attempting to be added

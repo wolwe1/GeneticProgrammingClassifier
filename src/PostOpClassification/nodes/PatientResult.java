@@ -43,6 +43,11 @@ public class PatientResult extends ChoiceNode<String> {
     }
 
     @Override
+    public boolean isValid() {
+        return true;
+    }
+
+    @Override
     public String feed(Problem problem) {
         return name;
     }

@@ -17,4 +17,6 @@ public interface ITreeGenerator<T> {
     NodeTree<T> replaceSubTree(PopulationMember<T> chromosome);
 
     List<NodeTree<T>> replaceSubTrees(PopulationMember<T> first, PopulationMember<T> second);
+
+    NodeTree<T> fillTree(NodeTree<T> mutatedChromosome);
 }

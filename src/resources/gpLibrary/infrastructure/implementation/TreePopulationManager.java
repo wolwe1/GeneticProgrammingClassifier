@@ -163,10 +163,17 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
             PopulationMember<T> chosenMember = unvisitedMembers.get(chosenIndex);
             unvisitedMembers.remove(chosenIndex);
 
-            chosenMembers.add(chosenMember);
+            chosenMembers.add(chosenMember.getCopy());
         }
 
         List<NodeTree<T>> newChromosomes = operator.operate(chosenMembers);
+
+        for (NodeTree<T> newChromosome : newChromosomes) {
+            if(!newChromosome.isValid()){
+                throw new RuntimeException("Operation created invalid tree");
+            }
+
+        }
         //Create new trees from the new members
         for (NodeTree<T> newChromosome : newChromosomes) {
             PopulationMember<T> newMember = new PopulationMember<>(newChromosome);

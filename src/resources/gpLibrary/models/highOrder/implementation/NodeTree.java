@@ -146,4 +146,6 @@ public abstract class NodeTree<T>
     public abstract boolean IsFull();
 
     public abstract boolean requiresTerminals();
+
+    public abstract boolean isValid();
 }

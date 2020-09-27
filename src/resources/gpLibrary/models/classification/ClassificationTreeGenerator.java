@@ -100,10 +100,17 @@ public class ClassificationTreeGenerator<T> implements ITreeGenerator<T> {
         Node<T> replacingNode = pickNode();
 
         tree.replaceNode(pointToReplace,replacingNode);
-        return fillTree(tree);
+        tree = (ClassificationTree<T>) fillTree(tree);
+
+        if(!tree.isValid())
+            throw new RuntimeException("Created invalid tree");
+
+        return tree;
     }
 
-    private NodeTree<T> fillTree(ClassificationTree<T> tree) {
+    @Override
+    public NodeTree<T> fillTree(NodeTree<T> treeToFill) {
+        ClassificationTree<T> tree = (ClassificationTree<T>) treeToFill;
         while (!tree.IsFull()) {
             try {
                 if(tree.requiresTerminals())
@@ -121,6 +128,10 @@ public class ClassificationTreeGenerator<T> implements ITreeGenerator<T> {
                 throw new RuntimeException("Unable to generate tree");
             }
         }
+
+        if(!tree.isValid())
+            throw new RuntimeException("Invalid tree created");
+
         return tree;
     }
 
@@ -132,12 +143,21 @@ public class ClassificationTreeGenerator<T> implements ITreeGenerator<T> {
         int pointToReplaceInFirst = randomGenerator.nextInt(firstTree.getTreeSize() - 1) + 1;
         int pointToReplaceInSecond = randomGenerator.nextInt(secondTree.getTreeSize() - 1) + 1;
 
-        Node<T> firstSubtree = firstTree.getNode(pointToReplaceInFirst);
-        Node<T> secondSubTree = secondTree.getNode(pointToReplaceInSecond);
+        Node<T> firstSubtree = firstTree.getNode(pointToReplaceInFirst).getCopy(true);
+        Node<T> secondSubTree = secondTree.getNode(pointToReplaceInSecond).getCopy(true);
+
 
         firstTree.replaceNode(pointToReplaceInFirst,secondSubTree);
         secondTree.replaceNode(pointToReplaceInSecond,firstSubtree);
+        //TODO: Trees arent updated correctly
+        if(!firstTree.isValid()){
+            var node = firstTree.getNode(pointToReplaceInFirst);
+            throw new RuntimeException("Invalid");
+        }
 
+        if(!secondTree.isValid()){
+            throw new RuntimeException("Invalid");
+        }
         List<NodeTree<T>> newTrees = new ArrayList<>();
         newTrees.add(firstTree);
         newTrees.add(secondTree);

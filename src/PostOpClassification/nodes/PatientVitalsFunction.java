@@ -13,8 +13,7 @@ public class PatientVitalsFunction extends IFeedDownFunction<String> {
 
     @Override
     protected Node<String> getCopy() {
-        PatientVitalsFunction newFunction = new PatientVitalsFunction(this.matchField,this.name,this.choices);
-        return newFunction;
+        return new PatientVitalsFunction(this.matchField, this.name, this.choices);
     }
 
     @Override
@@ -54,5 +53,19 @@ public class PatientVitalsFunction extends IFeedDownFunction<String> {
             return false;
 
         return this.Parent.hasAncestor(nodeToAdd);
+    }
+
+    @Override
+    public boolean isValid() {
+
+        if(_children.size() != _maxChildren)
+            return false;
+
+        for (Node<String> child : _children) {
+            if(!child.isValid())
+                return false;
+        }
+
+        return true;
     }
 }

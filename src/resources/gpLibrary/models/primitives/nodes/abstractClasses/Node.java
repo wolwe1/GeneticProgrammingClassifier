@@ -76,7 +76,16 @@ public abstract class Node<T>
 
         newChild.Parent = this;
         newChild.index = index;
+        newChild.setLevel(this._level + 1);
         _children.set(index,newChild);
+    }
+
+    private void setLevel(int level) {
+        this._level = level;
+
+        for (Node<T> child : _children) {
+            child.setLevel(level + 1);
+        }
     }
 
     public int getIndexOfChild(Node<T> child){
@@ -107,7 +116,7 @@ public abstract class Node<T>
         try{
             if(includeChildren){
                 for (Node<T> child : _children) {
-                    copy.addChild(child.getCopy());
+                    copy.addChild(child.getCopy(true));
                 }
             }
         }catch(Exception e){
@@ -135,4 +144,5 @@ public abstract class Node<T>
 
     public abstract boolean hasAncestor(Node<T> nodeToAdd);
 
+    public abstract boolean isValid();
 }

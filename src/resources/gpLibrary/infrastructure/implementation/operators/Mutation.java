@@ -28,8 +28,17 @@ public class Mutation<T> extends GeneticOperator<T> {
         List<NodeTree<T>> mutatedChromosomes = new ArrayList<>();
 
         for (PopulationMember<T> chromosome : chromosomes) {
-            mutatedChromosomes.add(generator.replaceSubTree(chromosome));
+            NodeTree<T> newTree = generator.replaceSubTree(chromosome);
+
+            mutatedChromosomes.add(newTree);
         }
+
+        for (NodeTree<T> mutatedChromosome : mutatedChromosomes) {
+            if(!mutatedChromosome.isValid()){
+                throw new RuntimeException("Invalid tree");
+            }
+        }
+
         return mutatedChromosomes;
     }
 }

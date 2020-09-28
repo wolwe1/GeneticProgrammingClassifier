@@ -4,6 +4,8 @@ import PostOpClassification.nodes.PatientResult;
 import PostOpClassification.nodes.PatientVitalsFunction;
 import PostOpClassification.infrastructure.ClassifierFitnessFunction;
 import PostOpClassification.nodes.PatientVitalsFunctionSingleValue;
+import resources.gpLibrary.functionality.implementation.StatisticsManager;
+import resources.gpLibrary.helpers.Printer;
 import resources.gpLibrary.infrastructure.implementation.TreePopulationManager;
 import resources.gpLibrary.infrastructure.implementation.operators.Crossover;
 import resources.gpLibrary.infrastructure.implementation.operators.LazyReproduction;
@@ -14,11 +16,18 @@ import resources.gpLibrary.infrastructure.interfaces.ITreeGenerator;
 import resources.gpLibrary.models.classification.ClassificationTreeGenerator;
 import resources.gpLibrary.models.classification.ProblemSet;
 import resources.gpLibrary.models.highOrder.implementation.FunctionalSet;
+import resources.gpLibrary.models.highOrder.implementation.PopulationMember;
+import resources.gpLibrary.models.highOrder.implementation.PopulationStatistics;
 import resources.gpLibrary.models.highOrder.implementation.TerminalSet;
+import resources.gpLibrary.models.highOrder.interfaces.IMemberStatistics;
 import resources.gpLibrary.models.primitives.IFitnessFunction;
+import resources.gpLibrary.models.primitives.enums.PrintLevel;
 import resources.helpers.FileManager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class Main {
 
@@ -37,14 +46,20 @@ public class Main {
     public static void main(String[] args) {
         int seed = 0;
         int populationSize = 500;
-        int numberOfGenerations = 150;
+        int numberOfGenerations = 500;
 
         FileManager fileManager = new FileManager();
         fileManager.setupDirectories();
 
+        var data = fileManager.getData();
+        List<List<String>> dataSets = splitData(data);
+        List<String> trainData = dataSets.get(0);
+        List<String> testData = dataSets.get(1);
         //Create fitness function
-        ProblemSet<String> problemSet = new ProblemSet<>(fileManager.getData(), Arrays.asList(dataNames.split(",")),"ADM-DECS");
-        IFitnessFunction<String> fitnessFunction = new ClassifierFitnessFunction<>(problemSet);
+        ProblemSet<String> trainingSet = new ProblemSet<>(trainData, Arrays.asList(dataNames.split(",")),"ADM-DECS");
+        ProblemSet<String> testSet = new ProblemSet<>(testData, Arrays.asList(dataNames.split(",")),"ADM-DECS");
+        IFitnessFunction<String> fitnessFunction = new ClassifierFitnessFunction<>(trainingSet);
+        IFitnessFunction<String> testFunction = new ClassifierFitnessFunction<>(testSet);
 
         //Create node sets
         FunctionalSet<String> functionalSet = new FunctionalSet<>();
@@ -69,7 +84,71 @@ public class Main {
         geneticAlgorithm.addOperator(Crossover.create(populationSize,0.6,generator));
         geneticAlgorithm.addOperator(Mutation.create(populationSize,0.2,generator));
         geneticAlgorithm.addOperator( LazyReproduction.create(2,populationSize,0.2,fitnessFunction));
+        geneticAlgorithm.setPrintLevel(PrintLevel.NONE);
 
-        geneticAlgorithm.run();
+        List<PopulationMember<String>> bestTrees = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            System.out.println("Run " + i);
+            var random = new Random(i);
+            random.setSeed(i);
+            generator.setRandomFunction( random);
+            var best = geneticAlgorithm.run();
+            bestTrees.add(best.getCopy());
+        }
+
+
+        int i = 0;
+        List<IMemberStatistics<Double>> performances = new ArrayList<>();
+        List<IMemberStatistics<Double>> generalisations = new ArrayList<>();
+
+        for (PopulationMember<String> bestTree : bestTrees) {
+            System.out.println("Performance of best from run " + ++i);
+            var performance = fitnessFunction.calculateFitness(bestTree.getTree());
+            performance.print();
+            performances.add(performance);
+
+            System.out.println("Generalisation");
+            var generalisation = testFunction.calculateFitness(bestTree.getTree());
+            generalisation.print();
+            generalisations.add(generalisation);
+            Printer.underline();
+        }
+
+        var avgPerformance = StatisticsManager.calculateAverages(performances);
+        var avgGen = StatisticsManager.calculateAverages(generalisations);
+        PopulationStatistics<Double> stdPerform = StatisticsManager.calculateStandardDeviation(performances);
+        PopulationStatistics<Double> stdGen = StatisticsManager.calculateStandardDeviation(generalisations);
+
+        Printer.print("Average performance on training set for best trees:");
+        avgPerformance.print();
+        Printer.print("Average performance on Testing set for best trees:");
+        avgGen.print();
+        Printer.print("Standard deviation on training set:");
+        stdPerform.print();
+        Printer.print("Standard deviation on testing set:");
+        stdGen.print();
+
+
+    }
+
+    private static List<List<String>> splitData(List<String> data) {
+        double percentageTrain = 0.7;
+        int numTrain = (int) (((double)data.size()*percentageTrain));
+
+        Random numgen = new Random(1L);
+        List<String> training = new ArrayList<>();
+
+        while (training.size() != numTrain){
+            int next = numgen.nextInt(data.size());
+
+            String dataItem = data.get(next);
+            data.remove(next);
+            training.add(dataItem);
+        }
+
+        List<String> testing = new ArrayList<>(data);
+
+        return Arrays.asList(training,testing);
     }
 }

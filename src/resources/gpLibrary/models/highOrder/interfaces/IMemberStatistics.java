@@ -3,7 +3,7 @@ package resources.gpLibrary.models.highOrder.interfaces;
 
 import java.util.Map;
 
-public interface IMemberStatistics {
+public interface IMemberStatistics<T> {
 
     /**
      * Returns whatever statistic measure is the fitness
@@ -11,11 +11,11 @@ public interface IMemberStatistics {
      */
     Double getFitness();
 
-    Map<String, Double> getMeasures();
+    Map<String, T> getMeasures();
 
-    Map.Entry<String, Double> getMeasure(String key);
+    Map.Entry<String, T> getMeasure(String key);
 
     void print();
 
-    void setMeasure(String key, double value);
+    void setMeasure(String key, T value);
 }

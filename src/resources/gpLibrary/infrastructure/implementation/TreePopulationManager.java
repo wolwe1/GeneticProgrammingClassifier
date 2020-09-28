@@ -22,9 +22,9 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
     protected List<PopulationMember<T>> _nextPopulation;
 
     //Statistics
-    protected List<IMemberStatistics> _populationStatistics;
-    protected List<PopulationStatistics> _populationHistory;
-    private  List<PopulationStatistics> compositionHistory;
+    protected List<IMemberStatistics<Double>> _populationStatistics;
+    protected List<PopulationStatistics<Double>> _populationHistory;
+    private final List<PopulationStatistics<Double>> compositionHistory;
 
 
     public TreePopulationManager(ITreeGenerator<T> treeGenerator, IFitnessFunction<T> fitnessFunction,int seed){
@@ -82,7 +82,7 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
 
     @Override
     public void printBasicHistory() {
-        PopulationStatistics changeOverRun = StatisticsManager.calculateChange(_populationHistory.get(0),_populationHistory.get(_populationHistory.size() - 1));
+        PopulationStatistics<String> changeOverRun = StatisticsManager.calculateChange(_populationHistory.get(0),_populationHistory.get(_populationHistory.size() - 1));
         changeOverRun.print();
     }
 
@@ -101,7 +101,7 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
 
         Printer.print("\nComposition change");
         Printer.underline();
-        PopulationStatistics changeInComposition =
+        PopulationStatistics<String> changeInComposition =
         StatisticsManager.calculateChange(compositionHistory.get(0),compositionHistory.get(compositionHistory.size() - 1));
 
         changeInComposition.print();
@@ -187,18 +187,18 @@ public class TreePopulationManager<T> implements IPopulationManager<T> {
         _nextPopulation = new ArrayList<>();
 
         for (PopulationMember<T> member : _currentPopulation) {
-            IMemberStatistics memberStatistics = _fitnessFunction.calculateFitness(member.getTree());
+            IMemberStatistics<Double> memberStatistics = _fitnessFunction.calculateFitness(member.getTree());
             member.setFitness(memberStatistics.getFitness());
             _populationStatistics.add(memberStatistics);
         }
 
-        PopulationStatistics populationStatistics = StatisticsManager.calculateAverages(_populationStatistics);
+        PopulationStatistics<Double> populationStatistics = StatisticsManager.calculateAverages(_populationStatistics);
         _populationHistory.add(populationStatistics);
 
         double averageTreeSize = getAverageTreeSize();
         var treeComposition = getTreeComposition();
 
-        var stats = new PopulationStatistics();
+        var stats = new PopulationStatistics<Double>();
         stats.setMeasure("Tree size",averageTreeSize);
 
         for (Map.Entry<String, Double> item : treeComposition.entrySet()) {

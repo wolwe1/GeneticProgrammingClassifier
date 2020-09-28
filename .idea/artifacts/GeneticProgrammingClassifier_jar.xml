@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="GeneticProgrammingClassifier:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/GeneticProgrammingClassifier_jar</output-path>
+    <root id="archive" name="GeneticProgrammingClassifier.jar">
+      <element id="module-output" name="GeneticProgrammingClassifier" />
+    </root>
+  </artifact>
+</component>

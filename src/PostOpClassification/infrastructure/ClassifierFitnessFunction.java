@@ -32,9 +32,9 @@ public class ClassifierFitnessFunction<T> implements IFitnessFunction<T> {
     }
 
     @Override
-    public IMemberStatistics calculateFitness(NodeTree<T> populationMember) {
+    public IMemberStatistics<Double> calculateFitness(NodeTree<T> populationMember) {
         ClassificationTree<T> tree = (ClassificationTree<T>) populationMember;
-        IMemberStatistics treeStats = new ClassificationStatistic();
+        IMemberStatistics<Double> treeStats = new ClassificationStatistic();
 
         double accuracy = 0;
         double hits = 0;
@@ -46,10 +46,12 @@ public class ClassifierFitnessFunction<T> implements IFitnessFunction<T> {
             T answer = problem.getAnswer();
             T guess = tree.feedProblem(problem);
 
-            if(answer.equals(guess))
+            if(answer.equals(guess)){
                 hits++;
+            }
+
         }
-        accuracy = (hits/totalProblems) * 100;
+        accuracy = (hits/(double) totalProblems) * 100;
         accuracy = Math.round(accuracy * 100.0) / 100.0;
         treeStats.setMeasure("Accuracy",accuracy);
         treeStats.setMeasure("Hits",hits);

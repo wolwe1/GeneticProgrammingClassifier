@@ -6,7 +6,7 @@ import resources.gpLibrary.models.highOrder.interfaces.IMemberStatistics;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClassificationStatistic implements IMemberStatistics {
+public class ClassificationStatistic implements IMemberStatistics<Double> {
 
     Map<String,Double> measures;
 
@@ -46,7 +46,7 @@ public class ClassificationStatistic implements IMemberStatistics {
     }
 
     @Override
-    public void setMeasure(String key, double value) {
+    public void setMeasure(String key, Double value) {
         measures.put(key,value);
     }
 }

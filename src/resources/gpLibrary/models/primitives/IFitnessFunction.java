@@ -19,7 +19,7 @@ public interface IFitnessFunction<T> {
      * @param populationMember The package containing the tree
      * @return The fitness of the underlying tree
      */
-    IMemberStatistics calculateFitness(NodeTree<T> populationMember);
+    IMemberStatistics<Double> calculateFitness(NodeTree<T> populationMember);
 
     /**
      * Evaluates if the fitness provided in the first parameter is better that that of the second

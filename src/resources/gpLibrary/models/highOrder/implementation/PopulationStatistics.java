@@ -7,8 +7,9 @@ import resources.gpLibrary.models.highOrder.interfaces.IMemberStatistics;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PopulationStatistics implements IMemberStatistics {
-    Map<String,Double> measures;
+public class PopulationStatistics<T> implements IMemberStatistics<T> {
+
+    Map<String,T> measures;
 
     public PopulationStatistics(){
         measures = new HashMap<>();
@@ -20,14 +21,14 @@ public class PopulationStatistics implements IMemberStatistics {
     }
 
     @Override
-    public Map<String, Double> getMeasures() {
+    public Map<String, T> getMeasures() {
         return measures;
     }
 
     @Override
-    public Map.Entry<String, Double> getMeasure(String key) {
+    public Map.Entry<String, T> getMeasure(String key) {
 
-        for (Map.Entry<String, Double> measure : measures.entrySet()) {
+        for (Map.Entry<String, T> measure : measures.entrySet()) {
             if(measure.getKey().equals(key))
                 return measure;
         }
@@ -37,13 +38,13 @@ public class PopulationStatistics implements IMemberStatistics {
     @Override
     public void print() {
 
-        for (Map.Entry<String, Double> measure : measures.entrySet()) {
-            Printer.print("Average " + measure.getKey() + ": " + measure.getValue());
+        for (Map.Entry<String, T> measure : measures.entrySet()) {
+            System.out.printf("%-20.20s  %-30.50s%n",measure.getKey() + ": ",measure.getValue());
         }
     }
 
     @Override
-    public void setMeasure(String key, double value) {
+    public void setMeasure(String key, T value) {
         measures.put(key,value);
     }
 

@@ -100,15 +100,15 @@ public class GeneticAlgorithm<T> implements IGeneticAlgorithm<T> {
      * @param bestPerformingGeneration The generation the best performer was found in
      */
     protected void summarise(PopulationMember<T> bestPerformer, int bestPerformingGeneration){
-        if(_printLevel == PrintLevel.NONE) return;
+        //if(_printLevel == PrintLevel.NONE) return;
 
         Printer.printLine();
         Printer.print("Summary of algorithm performance");
         Printer.underline();
 
-        if(_printLevel == PrintLevel.MINOR)
-            _populationManager.printBasicHistory();
-        else
+//        if(_printLevel == PrintLevel.MINOR)
+//            _populationManager.printBasicHistory();
+//        else
             _populationManager.printFullHistory();
 
         Printer.printLine();
